@@ -6,7 +6,7 @@ Here is the complete, step-by-step guide in English on how to set up, run, and a
 
 
 
-## Phase 1: Getting Your Folder ID
+### Phase 1: Getting Your Folder ID
 
 1\. Open Google Drive and go to the root folder you want to index.
 
