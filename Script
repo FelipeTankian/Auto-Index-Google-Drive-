@@ -1,0 +1,43 @@
+function createCompleteIndex() {
+  // Replace the text below with your root folder ID
+  var rootFolderId = 'PASTE_YOUR_FOLDER_ID_HERE'; 
+  
+  var rootFolder = DriveApp.getFolderById(rootFolderId);
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  
+  // Clears the current sheet and creates the headers
+  sheet.clear();
+  sheet.appendRow(["File Name", "Folder Path", "Access Link"]);
+  
+  // Optional: Makes the header bold and freezes the first row
+  sheet.getRange("A1:C1").setFontWeight("bold");
+  sheet.setFrozenRows(1);
+  
+  // Gets the root folder name to start the path
+  var initialPath = rootFolder.getName();
+  
+  // Calls the function that will search all folders and subfolders
+  listFilesInFolder(rootFolder, initialPath, sheet);
+}
+
+// This is the "helper" function that does the repetitive work (recursion)
+function listFilesInFolder(folder, path, sheet) {
+  // 1. First, list all files in the current folder
+  var files = folder.getFiles();
+  while (files.hasNext()) {
+    var file = files.next();
+    sheet.appendRow([file.getName(), path, file.getUrl()]);
+  }
+  
+  // 2. Then, check if there are any subfolders inside
+  var subfolders = folder.getFolders();
+  while (subfolders.hasNext()) {
+    var subfolder = subfolders.next();
+    
+    // Creates the new path (e.g., "Root Folder > Subfolder 1")
+    var newPath = path + " > " + subfolder.getName();
+    
+    // Repeats the entire process for the found subfolder
+    listFilesInFolder(subfolder, newPath, sheet);
+  }
+}
